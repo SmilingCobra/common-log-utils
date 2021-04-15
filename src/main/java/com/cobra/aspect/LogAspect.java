@@ -30,7 +30,6 @@ public class LogAspect {
         Long now = System.currentTimeMillis();
         Object result = null;
         try {
-            result = joinPoint.proceed();
             Object[] args = joinPoint.getArgs();
             Signature signature = joinPoint.getSignature();
             MethodSignature methodSignature = (MethodSignature) signature;
@@ -43,6 +42,7 @@ public class LogAspect {
             logContext.setLogId(UUID.randomUUID().toString());
             logContext.setModule(logEndpoint.module());
             LogSession.logSession.set(logContext);
+            result = joinPoint.proceed();
             LogEntity logEntity = LogHelper.monitor(logger).add("title", "mark").add("result", result);
             if(args!=null){
                 for(int i = 0;i<args.length;i++){
